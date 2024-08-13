@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.SysAnimalMapper">
+    <resultMap type="SysAnimal" id="SysAnimalResult">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="img" column="img"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="weight" column="weight"/>
+    </resultMap>
+    <sql id="selectAnimalVo">
+        select id, name, img, create_time, create_by, weight
+        from animal
+    </sql>
+    <insert id="add" parameterType="SysAnimal">
+        insert into animal(
+        <if test="name != null and name != ''">name,</if>
+        <if test="img != null and img != ''">img,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="weight != null and weight != ''">weight,</if>
+        create_time
+        )values(
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="img != null and img != ''">#{img},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        <if test="weight != null and weight != ''">#{weight},</if>
+        sysdate()
+        )
+    </insert>
+    <update id="update" parameterType="SysAnimal">
+        update animal
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="weight != null and weight != ''">weight = #{weight},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnimalByIds">
+        delete from animal where id = #{id}
+    </delete>
+
+    <select id="selectAnimalList" resultMap="SysAnimalResult" parameterType="SysAnimal">
+        <include refid="selectAnimalVo"/>
+        <where>
+            <if test="name != null and name != ''">
+                AND name like concat('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getInfo" resultType="com.ruoyi.common.core.domain.entity.SysAnimal">
+        <include refid="selectAnimalVo"/>
+        where id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.SysComputedMapper">
+    <resultMap type="SysComputed" id="SysComputedResult">
+        <id property="id" column="id"/>
+        <result property="animalId" column="animal_id"/>
+        <result property="animalName" column="animal_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="weight" column="weight"/>
+        <result property="img" column="img"/>
+    </resultMap>
+    <sql id="SysComputedVo">
+        select id, animal_id, create_time, create_by, animal_name, weight,img
+        from computed
+    </sql>
+    <insert id="add" parameterType="SysComputed">
+        insert into computed(
+        <if test="animalId != null and animalId != 0">animal_id,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="img != null and img != ''">img,</if>
+        <if test="animalName != null and animalName != ''">animal_name,</if>
+        <if test="weight != null and weight != ''">weight,</if>
+        create_time
+        )values(
+        <if test="animalId != null and animalId != 0">#{animalId},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        <if test="img != null and img != ''">#{img},</if>
+        <if test="animalName != null and animalName != ''">#{animalName},</if>
+        <if test="weight != null and weight != ''">#{weight},</if>
+        sysdate()
+        )
+    </insert>
+    <select id="lsit" resultMap="SysComputedResult" parameterType="SysComputed">
+        <include refid="SysComputedVo"></include>
+        <where>
+            <if test="animalName != null and animalName != ''">
+                animal_name like concat('%', #{animalName}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>
